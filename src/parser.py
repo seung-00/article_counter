@@ -49,6 +49,14 @@ def parse(keywords, str_dates):
                 print(e)
     return results
 
+def save_csv(results, str_dates):
+    with open('article_counts.csv', 'w', encoding='utf-8', newline='') as writer_csv:
+        writer = csv.writer(writer_csv, delimiter=',')
+        writer.writerow(['keyword'] + str_dates)
+
+        for keyword, counts in results.items():
+            writer.writerow([keyword] + counts)
+
 if __name__ == '__main__':
     keywords = input("Please enter a search term." +
     "If you have multiple search terms, separate them with commas (no white space).\n"+
@@ -65,3 +73,4 @@ if __name__ == '__main__':
         end_date = dates[1]
         str_dates = convert_dates(strart_date, end_date)
         results = parse(keywords, str_dates)
+        save_csv(results, str_dates)
