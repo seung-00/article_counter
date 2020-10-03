@@ -1,6 +1,7 @@
 import requests
 import datetime
 from bs4 import BeautifulSoup
+import csv
 
 def convert_dates(start_date, end_date):
     cur_date = start_date
@@ -20,20 +21,33 @@ def _create_urls(cur_keyword, str_dates):
     return urls
 
 def parse(keywords, str_dates):
-    cur_keyword = keywords.pop()
-    urls = _create_urls(cur_keyword, str_dates)
+    results = {}
+    while keywords:
+        cur_keyword = keywords.pop()
 
-    for url in urls:
-        try:
-            req = requests.get(f"{url}")
-            html = req.text
-            is_ok = req.ok
-            print(is_ok)
-            soup = BeautifulSoup(html, 'html.parser')
-            temp = soup.select_one(".all_my > span")
-            print(temp.get_text())
-        except Exception as e:
-            print(e)
+        # set current keyword as a key. the value is count list
+        results[cur_keyword] = []
+        urls = _create_urls(cur_keyword, str_dates)
+
+        for url in urls:
+            try:
+                req = requests.get(f"{url}")
+                html = req.text
+                # is_ok = req.ok
+                soup = BeautifulSoup(html, 'html.parser')
+                value = soup.select_one(".all_my > span")
+
+                # if there no search result, assign 0
+                if not value:
+                    count = 0
+                else:
+                    temp = str(value)
+                    count = temp.split("/ ")[1].split("건")[0]
+                results[cur_keyword].append(count)
+
+            except Exception as e:
+                print(e)
+    return results
 
 if __name__ == '__main__':
     keywords = input("Please enter a search term." +
@@ -50,4 +64,4 @@ if __name__ == '__main__':
         strart_date = dates[0]
         end_date = dates[1]
         str_dates = convert_dates(strart_date, end_date)
-        parse(keywords, str_dates)
+        results = parse(keywords, str_dates)
