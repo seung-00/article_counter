@@ -19,8 +19,8 @@ Please enter start date and end date you want to search.
 ➜ 2020-10-01,2020-10-10
 
 What you entered...
-   keywords => ['python']
-   dates => [datetime.datetime(2020, 10, 1, 0, 0), datetime.datetime(2020, 10, 10, 0, 0)]
+   keywords => ['코로나', 'COVID-19']
+   dates => [datetime.datetime(2020, 1, 19, 0, 0), datetime.datetime(2020, 1, 22, 0, 0)]
 Go? Y / else
 ➜ Y
 
