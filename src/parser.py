@@ -50,24 +50,30 @@ def parse(keywords, str_dates):
     return results
 
 def save_csv(results, str_dates):
-    with open('article_counts.csv', 'w', encoding='utf-8', newline='') as writer_csv:
-        writer = csv.writer(writer_csv, delimiter=',')
-        writer.writerow(['keyword'] + str_dates)
+    try:
+        with open('article_counts.csv', 'w', encoding='utf-8', newline='') as writer_csv:
+            writer = csv.writer(writer_csv, delimiter=',')
+            writer.writerow(['keyword'] + str_dates)
 
-        for keyword, counts in results.items():
-            writer.writerow([keyword] + counts)
+            for keyword, counts in results.items():
+                writer.writerow([keyword] + counts)
+        print("\nDone!")
+
+    except Exception as e:
+        print(e)
 
 if __name__ == '__main__':
     keywords = input("Please enter a search term." +
-    "If you have multiple search terms, separate them with commas (no white space).\n"+
-    "ex) python,node,go\n").split(",")
+    "If you have multiple search terms, separate them with commas (no white space)."+
+    "\n   ex) python,node,go\n").split(",")
     
     dates = list(map(lambda date:
     datetime.datetime.strptime(str(date), '%Y-%m-%d'),
-    input("Please enter start date and end date you want to search." +
-    "ex) 2020-09-03,2020-10-10\n").split(",")))
+    input("\nPlease enter start date and end date you want to search." +
+    "\n   ex) 2020-09-03,2020-10-10\n").split(",")))
 
-    answer = input(f"what you entered \nkeywords => {keywords}\ndates => {dates}\nGo? Y / else\n")
+    answer = input(f"\nWhat you entered... \n   keywords => {keywords}\n   dates => {dates}\nGo? Y / else\n")
+
     if(answer == 'Y'):
         strart_date = dates[0]
         end_date = dates[1]
