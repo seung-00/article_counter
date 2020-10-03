@@ -15,8 +15,8 @@ Please enter a search term.If you have multiple search terms, separate them with
 ➜ 코로나,COVID-19
 
 Please enter start date and end date you want to search.
-   ex) 2020.01.19,2020.01.22
-➜ 2020-10-01,2020-10-10
+   ex) 2020-09-03,2020-10-10
+➜ 2020-01-19,2020-01-22
 
 What you entered...
    keywords => ['코로나', 'COVID-19']
