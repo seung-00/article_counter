@@ -5,18 +5,18 @@ import csv
 
 def convert_dates(start_date, end_date):
     cur_date = start_date
-    str_date = cur_date.strftime('%Y.%m.%d')
+    str_date = cur_date.strftime('%Y%m%d')
     str_dates = [str_date]
     
     while (cur_date != end_date):
         cur_date += datetime.timedelta(days=1)
-        str_date = cur_date.strftime('%Y.%m.%d')
+        str_date = cur_date.strftime('%Y%m%d')
         str_dates.append(str_date)
     return str_dates
 
 def _create_urls(cur_keyword, str_dates):
     urls = list(map(lambda d:
-    f"https://search.naver.com/search.naver?where=news&query={cur_keyword}&sm=tab_opt&sort=0&photo=0&field=0&reporter_article=&pd=3&ds={d}&de={d}",
+    f"https://search.daum.net/search?w=news&DA=PGD&enc=utf8&cluster=y&cluster_page=1&q={cur_keyword}&period=d&sd={d}000000&ed={d}235959&p=1",
     str_dates))
     return urls
 
@@ -24,7 +24,6 @@ def parse(keywords, str_dates):
     results = {}
     while keywords:
         cur_keyword = keywords.pop()
-
         # set current keyword as a key. the value is count list
         results[cur_keyword] = []
         urls = _create_urls(cur_keyword, str_dates)
@@ -35,14 +34,17 @@ def parse(keywords, str_dates):
                 html = req.text
                 # is_ok = req.ok
                 soup = BeautifulSoup(html, 'html.parser')
-                value = soup.select_one(".all_my > span")
+                value = soup.select_one("#resultCntArea")
+                print(url)
 
-                # if there no search result, assign 0
+                # if there no result of query selecting
                 if not value:
-                    count = 0
+                    raise Exception("there no result of query selecting, check the Daum UI changes")
                 else:
                     temp = str(value)
-                    count = temp.split("/ ")[1].split("건")[0]
+                    pivot = "약 " if '약' in temp else '/ '
+                    count = temp.split(f"{pivot}")[1].split("건")[0]
+                print(f"=> {count}")
                 results[cur_keyword].append(count)
 
             except Exception as e:
@@ -75,8 +77,12 @@ if __name__ == '__main__':
     answer = input(f"\nWhat you entered... \n   keywords => {keywords}\n   dates => {dates}\nGo? Y / else\n")
 
     if(answer == 'Y'):
-        strart_date = dates[0]
-        end_date = dates[1]
-        str_dates = convert_dates(strart_date, end_date)
-        results = parse(keywords, str_dates)
-        save_csv(results, str_dates)
+        try:
+            print("\n...")
+            strart_date = dates[0]
+            end_date = dates[1]
+            str_dates = convert_dates(strart_date, end_date)
+            results = parse(keywords, str_dates)
+            save_csv(results, str_dates)
+        except Exception as e:
+            print(e)
