@@ -1,8 +1,8 @@
 # article_counter
 
-A program that crawls the number of news that matches the search term on Naver News by date.
+A program that crawls the number of news that matches the search term on Daum News by date.
 
-검색어와 일치하는 네이버 뉴스 개수를 일자별로 크롤링하는 프로그램입니다.
+검색어와 일치하는 다음 뉴스 개수를 일자별로 크롤링하는 프로그램입니다.
 
 ---
 
